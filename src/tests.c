@@ -1,8 +1,3 @@
-# Simple Strings for C
-
-A header-only pure C library to manipulate more easily string in C for my personal usage
-
-```c
 #define SIMPLE_STRING_IMPL
 #include "string.h"
 
@@ -36,4 +31,3 @@ int main(void) {
 
     return 0;
 }
-```
