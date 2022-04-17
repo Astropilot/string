@@ -7,6 +7,7 @@ A header-only pure C library to manipulate more easily string in C for my person
 #include "string.h"
 
 #include <stdio.h>
+#include <string.h>
 
 int main(void) {
     // Define strings easily from old school char arrays
@@ -14,19 +15,25 @@ int main(void) {
     string my_string2 = STR(" World");
 
     // Concatenation!
-    APPEND(my_string, my_string2);
-    APPEND(my_string, "!");
-
-    // Access underlying char array for libc functions like printf
-    char *original_array = ARRAY(my_string);
+    APPEND_STR(my_string, my_string2);
+    APPEND_ARR(my_string, "!");
 
     // Access to the length of the string is O(1)
-    printf("String \"%s\" of size %lu\n", original_array, LEN(my_string));
+    printf("String \"%s\" of size %lu\n", my_string, string_len(my_string));
 
-    string copy = STR(my_string); // Easy copy!
+    string copy = COPY(my_string); // Easy copy!
 
-    if (COMPARE(my_string, copy) == 0) {
+    if (strcmp(my_string, copy) == 0) {
         printf("The two strings are equals!\n");
+    }
+
+    // Modify string easily
+    copy[0] = 'B';
+
+    printf("Copy \"%s\" of size %lu\n", copy, string_len(copy));
+
+    if (strcmp(my_string, copy) != 0) {
+        printf("The two strings are not equals!\n");
     }
 
     // Do not forget to free your strings
