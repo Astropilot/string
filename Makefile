@@ -11,21 +11,22 @@
 # license information.
 #*******************************************************************************
 
-CC		= gcc
-CFLAGS	= -Wall -Wextra -Werror -g
+CC		= g++
+CFLAGS	= -Wall -Wextra -Werror -g -pthread -I /usr/local/include/gtest/
+GTEST	= /usr/local/lib/libgtest.a
 
-FOLDER  = build/
-TARGET	= string
+FOLDER  = tests/
+TARGET	= tests
 RM		= rm -f
 
-SRC		= src/tests.c
+SRC		= tests/tests.cpp
 
-OBJ		= $(SRC:.c=.o)
+OBJ		= $(SRC:.cpp=.o)
 
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(FOLDER)$(TARGET)
+	$(CC) $(CFLAGS) $(OBJ) $(GTEST) -o $(FOLDER)$(TARGET)
 
 .PHONY: clean fclean re
 
