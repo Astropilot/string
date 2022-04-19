@@ -13,27 +13,28 @@
 
 CC		= g++
 CFLAGS	= -Wall -Wextra -Werror -g -pthread -I /usr/local/include/gtest/
+LFLAGS	= --coverage
 GTEST	= /usr/local/lib/libgtest.a
 
-FOLDER  = tests/
-TARGET	= tests
 RM		= rm -f
 
-SRC		= tests/tests.cpp
+all: tests
 
-OBJ		= $(SRC:.cpp=.o)
+tests: tests/simple_strings.o tests/tests.o
+	$(CC) $(CFLAGS) tests/simple_strings.o tests/tests.o $(LFLAGS) $(GTEST) -o tests/tests
 
-all: $(TARGET)
+tests/simple_strings.o: tests/simple_strings.cpp
+	$(CC) $(CFLAGS) --coverage -O0 -c tests/simple_strings.cpp -o tests/simple_strings.o
 
-$(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(GTEST) -o $(FOLDER)$(TARGET)
+tests/tests.o: tests/tests.cpp
+	$(CC) $(CFLAGS) -c tests/tests.cpp -o tests/tests.o
 
 .PHONY: clean fclean re
 
 clean:
-	$(RM) $(OBJ)
+	$(RM) tests/tests.o tests/simple_strings.o
 
 fclean: clean
-	$(RM) $(FOLDER)$(TARGET)
+	$(RM) tests/tests
 
 re: fclean all

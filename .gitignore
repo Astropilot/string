@@ -120,5 +120,10 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,windows,linux,c
 
-# Ignore testing executable
+# Ignore testing | Code coverage
 tests/tests
+
+*.gcda
+*.gcno
+
+coverage.xml

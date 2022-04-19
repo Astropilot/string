@@ -170,6 +170,12 @@ string* spls_split(const string str, const string separator, unsigned int maxspl
 SIMPLE_STRINGS_API
 string* spls_splitlines(const string str, bool keeplinebreaks);
 
+/* Public utils */
+#define STR(str) spls_new_string(str)
+#define CLONE(str) spls_clone(str)
+#define APPEND_STR(str, to_append) (str) = spls_append_string(str, to_append)
+#define APPEND_ARR(str, to_append) (str) = spls_append_array(str, to_append)
+
 #ifdef __cplusplus
 }
 #endif
@@ -185,13 +191,6 @@ string* spls_splitlines(const string str, bool keeplinebreaks);
 #define NULL_GUARD(ptr, return_val) if (ptr == NULL) return (return_val);
 #define NULL_GUARD_VOID(ptr) if (ptr == NULL) return;
 #define SAFE_FREE(ptr) if (ptr != NULL) _SIMPLE_STRINGS_FREE(ptr);
-
-
-/* Public utils */
-#define STR(str) spls_new_string(str)
-#define CLONE(str) spls_clone(str)
-#define APPEND_STR(str, to_append) (str) = spls_append_string(str, to_append)
-#define APPEND_ARR(str, to_append) (str) = spls_append_array(str, to_append)
 
 string spls_new_string(const char *str) {
     NULL_GUARD(str, NULL)
@@ -243,7 +242,6 @@ string spls_append_string(string str, string to_append) {
         str_header = (string_header_t*) str_buffer;
 		str_header->capacity = new_capacity;
 	}
-	//strcat(BUFFER_STR_PTR(str_buffer), to_append);
     strcpy(BUFFER_STR_PTR(str_buffer) + str_header->length, to_append);
 	str_header->length = total_len - 1;
 
@@ -266,7 +264,6 @@ string spls_append_array(string str, const char *to_append) {
         str_header = (string_header_t*) str_buffer;
 		str_header->capacity = new_capacity;
 	}
-	//strcat(BUFFER_STR_PTR(str_buffer), to_append);
     strcpy(BUFFER_STR_PTR(str_buffer) + str_header->length, to_append);
     str_header->length = total_len - 1;
 
@@ -394,8 +391,8 @@ bool spls_endswith(const string str, const string value) {
         return false;
     }
 
-    for (i = str_len - 1; i > str_len - value_len; i--) { //TODO: -1 ?
-        if (str[i] != value[i]) {
+    for (i = 0; i < value_len; i++) {
+        if (str[str_len - 1 - i] != value[value_len - 1 - i]) {
             return false;
         }
     }
