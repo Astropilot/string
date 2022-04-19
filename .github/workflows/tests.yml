@@ -39,7 +39,7 @@ jobs:
           cd googletest
           mkdir build
           cd build
-          cmake ..
+          cmake -DBUILD_GMOCK=OFF ..
           make
           sudo make install
           cd ../..

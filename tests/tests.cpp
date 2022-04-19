@@ -178,6 +178,7 @@ TEST(Strings, StringIsAlphaNum) {
     EXPECT_EQ(spls_isalnum(my_string2), true);
 
     spls_free_string(my_string);
+    spls_free_string(my_string2);
 }
 
 int main(int argc, char *argv[]) {

@@ -13,15 +13,14 @@
 
 CC		= g++
 CFLAGS	= -Wall -Wextra -Werror -g -pthread -I /usr/local/include/gtest/
-LFLAGS	= --coverage
-GTEST	= /usr/local/lib/libgtest.a
+LFLAGS	= --coverage -L/usr/local/lib -L/usr/local/lib/x86_64-linux-gnu -lgtest
 
 RM		= rm -f
 
 all: tests
 
 tests: tests/simple_strings.o tests/tests.o
-	$(CC) $(CFLAGS) tests/simple_strings.o tests/tests.o $(LFLAGS) $(GTEST) -o tests/tests
+	$(CC) $(CFLAGS) tests/simple_strings.o tests/tests.o $(LFLAGS) -o tests/tests
 
 tests/simple_strings.o: tests/simple_strings.cpp
 	$(CC) $(CFLAGS) --coverage -O0 -c tests/simple_strings.cpp -o tests/simple_strings.o
