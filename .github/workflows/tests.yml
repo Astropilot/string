@@ -4,8 +4,14 @@ on:
   push:
     branches:
       - main
+    paths:
+      - simple_strings/**
+      - tests/**
   pull_request:
     types: [opened, synchronize]
+    paths:
+      - simple_strings/**
+      - tests/**
   workflow_dispatch:
     inputs:
       debug_enabled:
