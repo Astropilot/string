@@ -170,6 +170,9 @@ string* spls_split(const string str, const string separator, unsigned int maxspl
 SIMPLE_STRINGS_API
 string* spls_splitlines(const string str, bool keeplinebreaks);
 
+SIMPLE_STRINGS_API
+string spls_substring(const string str, unsigned int start_index, unsigned int end_index);
+
 /* Public utils */
 #define STR(str) spls_new_string(str)
 #define CLONE(str) spls_clone(str)
@@ -347,7 +350,7 @@ unsigned int spls_count(const string str, const string search, unsigned int star
     while(start < end) {
         int pos = spls_find(str, search, start, end);
 
-        if (pos > 0) {
+        if (pos >= 0) {
             start = pos + 1;
             count++;
         } else {
@@ -401,12 +404,29 @@ bool spls_endswith(const string str, const string value) {
 }
 
 int spls_find(const string str, const string search, unsigned int start, unsigned int end) {
-    //TODO: Implement
-    (void)str;
-    (void)search;
-    (void)start;
-    (void)end;
-    return 0;
+    NULL_GUARD(str, -1)
+    NULL_GUARD(search, -1)
+
+    size_t str_len = spls_len(str);
+
+    if (start > str_len - 1 || end > str_len - 1 || start > end) {
+        return -1;
+    }
+    if (str_len < spls_len(search)) {
+        return -1;
+    }
+
+    string sub = spls_substring(str, start, end);
+
+    char *find = strstr(sub, search);
+
+    spls_free_string(sub);
+
+    if (find == NULL) {
+        return -1;
+    }
+
+    return (find - sub) + start;
 }
 
 bool spls_isalnum(const string str) {
@@ -648,12 +668,40 @@ string spls_rstrip(const string str, const string characters) {
 }
 
 string spls_replace(const string str, const string old_value, const string new_value, unsigned int count) {
-    //TODO: Implement
-    (void)str;
-    (void)old_value;
-    (void)new_value;
-    (void)count;
-    return NULL;
+    NULL_GUARD(str, NULL)
+
+    if (old_value == NULL || new_value == NULL || count == 0) {
+        return spls_clone(str);
+    }
+
+    unsigned int replaced = 0;
+    unsigned int start = 0;
+    unsigned int end = spls_len(str) - 1;
+    int last_index_found = -1;
+    string new_string = spls_new_string("");
+
+    do {
+        last_index_found = spls_find(str, old_value, start, end);
+
+        if (last_index_found >= 0) {
+            string sub = spls_substring(str, start, last_index_found);
+
+            new_string = spls_append_string(new_string, sub);
+            new_string = spls_append_string(new_string, new_value);
+            spls_free_string(sub);
+
+            start = last_index_found + spls_len(old_value);
+
+            replaced += 1;
+        }
+
+    } while (replaced < count && last_index_found >= 0);
+
+    if (start < end) {
+        new_string = spls_append_array(new_string, (str + start));
+    }
+
+    return new_string;
 }
 
 string* spls_split(const string str, const string separator, unsigned int maxsplit) {
@@ -669,6 +717,27 @@ string* spls_splitlines(const string str, bool keeplinebreaks) {
     (void)str;
     (void)keeplinebreaks;
     return NULL;
+}
+
+string spls_substring(const string str, unsigned int start_index, unsigned int end_index) {
+    NULL_GUARD(str, NULL)
+
+    size_t str_len = spls_len(str);
+
+    if (start_index > str_len - 1 || end_index > str_len || start_index > end_index)
+    {
+        return NULL;
+    }
+
+    string copy = spls_clone(str);
+
+    copy[end_index] = '\0';
+
+    string sub = spls_new_string(copy + start_index);
+
+    spls_free_string(copy);
+
+    return sub;
 }
 
 /* We clear all internals directives for preventing public use */

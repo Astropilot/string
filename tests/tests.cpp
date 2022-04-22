@@ -181,6 +181,84 @@ TEST(Strings, StringIsAlphaNum) {
     spls_free_string(my_string2);
 }
 
+TEST(Strings, SubString) {
+    string my_string = STR("a yellow submarine");
+
+    string sub1 = spls_substring(my_string, 0, spls_len(my_string));
+    string sub2 = spls_substring(my_string, 2, 8);
+    string sub3 = spls_substring(my_string, 9, spls_len(my_string));
+
+    EXPECT_STREQ(my_string, sub1);
+    EXPECT_STREQ(sub2, "yellow");
+    EXPECT_STREQ(sub3, "submarine");
+
+    spls_free_string(my_string);
+    spls_free_string(sub1);
+    spls_free_string(sub2);
+    spls_free_string(sub3);
+}
+
+TEST(Strings, FindStrings) {
+    string my_string = STR("a yellow submarine");
+    string search1 = STR("yellow");
+    string search2 = STR("sub");
+    string search3 = STR("bob");
+
+    EXPECT_EQ(spls_find(my_string, search1, 0, spls_len(my_string) - 1), 2);
+    EXPECT_EQ(spls_find(my_string, search1, 5, spls_len(my_string) - 1), -1);
+    EXPECT_EQ(spls_find(my_string, search2, 0, spls_len(my_string) - 1), 9);
+    EXPECT_EQ(spls_find(my_string, search2, 0, 9), -1);
+    EXPECT_EQ(spls_find(my_string, search3, 0, spls_len(my_string) - 1), -1);
+
+    spls_free_string(my_string);
+    spls_free_string(search1);
+    spls_free_string(search2);
+    spls_free_string(search3);
+}
+
+TEST(Strings, ReplaceStrings) {
+    string my_string = STR("one one was a race horse, two two was one too.");
+    string old = STR("one");
+    string new_ = STR("three");
+    string old_not_found = STR("toto");
+
+    string one_to_three = spls_replace(my_string, old, new_, -1);
+
+    EXPECT_STREQ(one_to_three, "three three was a race horse, two two was three too.");
+
+    spls_free_string(one_to_three);
+
+    one_to_three = spls_replace(my_string, old, new_, 2);
+
+    EXPECT_STREQ(one_to_three, "three three was a race horse, two two was one too.");
+
+    string one_to_toto = spls_replace(my_string, old_not_found, new_, -1);
+
+    EXPECT_STREQ(one_to_toto, my_string);
+
+    spls_free_string(my_string);
+    spls_free_string(old);
+    spls_free_string(new_);
+    spls_free_string(old_not_found);
+    spls_free_string(one_to_three);
+    spls_free_string(one_to_toto);
+}
+
+TEST(Strings, StringsCount) {
+    string my_string = STR("one one was a race horse, two two was one too.");
+    string one = STR("one");
+    string toto = STR("toto");
+
+    EXPECT_EQ(spls_count(my_string, one, 0, spls_len(my_string) - 1), 3);
+    EXPECT_EQ(spls_count(my_string, one, 10, spls_len(my_string) - 1), 1);
+    EXPECT_EQ(spls_count(my_string, one, 10, 15), 0);
+    EXPECT_EQ(spls_count(my_string, toto, 0, spls_len(my_string) - 1), 0);
+
+    spls_free_string(my_string);
+    spls_free_string(one);
+    spls_free_string(toto);
+}
+
 int main(int argc, char *argv[]) {
     ::testing::InitGoogleTest(&argc, argv);
 
