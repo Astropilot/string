@@ -138,6 +138,8 @@ string spls_replace(const string str, const string old_value, const string new_v
 string* spls_split(const string str, const string separator, unsigned int maxsplit);
 
 string* spls_splitlines(const string str, bool keeplinebreaks);
+
+string spls_substring(const string str, unsigned int start_index, unsigned int end_index);
 ```
 
 ## Contributing
