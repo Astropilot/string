@@ -181,6 +181,108 @@ TEST(Strings, StringIsAlphaNum) {
     spls_free_string(my_string2);
 }
 
+TEST(Strings, StringIsAlpha) {
+    string my_string = STR("helloworld");
+    string my_string2 = STR("123abc456");
+
+    EXPECT_STREQ(my_string, "helloworld");
+    EXPECT_EQ(spls_len(my_string), 10);
+
+    EXPECT_STREQ(my_string2, "123abc456");
+    EXPECT_EQ(spls_len(my_string2), 9);
+
+    EXPECT_EQ(spls_isalpha(my_string), true);
+    EXPECT_EQ(spls_isalpha(my_string2), false);
+
+    spls_free_string(my_string);
+    spls_free_string(my_string2);
+}
+
+TEST(Strings, StringIsDigit) {
+    string my_string = STR("123456");
+    string my_string2 = STR("123abc456");
+
+    EXPECT_STREQ(my_string, "123456");
+    EXPECT_EQ(spls_len(my_string), 6);
+
+    EXPECT_STREQ(my_string2, "123abc456");
+    EXPECT_EQ(spls_len(my_string2), 9);
+
+    EXPECT_EQ(spls_isdigit(my_string), true);
+    EXPECT_EQ(spls_isdigit(my_string2), false);
+
+    spls_free_string(my_string);
+    spls_free_string(my_string2);
+}
+
+TEST(Strings, StringIsLower) {
+    string my_string = STR("hello world!");
+    string my_string2 = STR("Hello World!");
+
+    EXPECT_STREQ(my_string, "hello world!");
+    EXPECT_EQ(spls_len(my_string), 12);
+
+    EXPECT_STREQ(my_string2, "Hello World!");
+    EXPECT_EQ(spls_len(my_string2), 12);
+
+    EXPECT_EQ(spls_islower(my_string), true);
+    EXPECT_EQ(spls_islower(my_string2), false);
+
+    spls_free_string(my_string);
+    spls_free_string(my_string2);
+}
+
+TEST(Strings, StringIsUpper) {
+    string my_string = STR("HELLO WORLD!");
+    string my_string2 = STR("Hello World!");
+
+    EXPECT_STREQ(my_string, "HELLO WORLD!");
+    EXPECT_EQ(spls_len(my_string), 12);
+
+    EXPECT_STREQ(my_string2, "Hello World!");
+    EXPECT_EQ(spls_len(my_string2), 12);
+
+    EXPECT_EQ(spls_isupper(my_string), true);
+    EXPECT_EQ(spls_isupper(my_string2), false);
+
+    spls_free_string(my_string);
+    spls_free_string(my_string2);
+}
+
+TEST(Strings, StringIsPrintable) {
+    string my_string = STR("Hello World!");
+    string my_string2 = STR("Hello World!\n");
+
+    EXPECT_STREQ(my_string, "Hello World!");
+    EXPECT_EQ(spls_len(my_string), 12);
+
+    EXPECT_STREQ(my_string2, "Hello World!\n");
+    EXPECT_EQ(spls_len(my_string2), 13);
+
+    EXPECT_EQ(spls_isprintable(my_string), true);
+    EXPECT_EQ(spls_isprintable(my_string2), false);
+
+    spls_free_string(my_string);
+    spls_free_string(my_string2);
+}
+
+TEST(Strings, StringIsSpace) {
+    string my_string = STR("Hello World!");
+    string my_string2 = STR("   ");
+
+    EXPECT_STREQ(my_string, "Hello World!");
+    EXPECT_EQ(spls_len(my_string), 12);
+
+    EXPECT_STREQ(my_string2, "   ");
+    EXPECT_EQ(spls_len(my_string2), 3);
+
+    EXPECT_EQ(spls_isspace(my_string), false);
+    EXPECT_EQ(spls_isspace(my_string2), true);
+
+    spls_free_string(my_string);
+    spls_free_string(my_string2);
+}
+
 TEST(Strings, SubString) {
     string my_string = STR("a yellow submarine");
 
@@ -257,6 +359,80 @@ TEST(Strings, StringsCount) {
     spls_free_string(my_string);
     spls_free_string(one);
     spls_free_string(toto);
+}
+
+TEST(Strings, StringStrip) {
+    string my_string = STR("123hello123");
+    string my_string2 = STR("123");
+    string my_string3 = STR("    Little test  ");
+    string strip_space = STR(" ");
+
+    string my_string_stripped = spls_strip(my_string, my_string2);
+    string my_string2_stripped = spls_strip(my_string2, my_string2);
+    string my_string3_stripped = spls_strip(my_string3, strip_space);
+
+    EXPECT_STREQ(my_string_stripped, "hello");
+    EXPECT_EQ(spls_len(my_string_stripped), 5);
+
+    EXPECT_STREQ(my_string2_stripped, "");
+    EXPECT_EQ(spls_len(my_string2_stripped), 0);
+
+    EXPECT_STREQ(my_string3_stripped, "Little test");
+    EXPECT_EQ(spls_len(my_string3_stripped), 11);
+
+    spls_free_string(my_string);
+    spls_free_string(my_string2);
+    spls_free_string(my_string3);
+    spls_free_string(my_string_stripped);
+    spls_free_string(my_string2_stripped);
+    spls_free_string(my_string3_stripped);
+    spls_free_string(strip_space);
+}
+
+TEST(Strings, StringLStrip) {
+    string my_string = STR("123hello123");
+    string my_string2 = STR("    Little test  ");
+    string strip_123 = STR("123");
+    string strip_space = STR(" ");
+
+    string my_string_stripped = spls_lstrip(my_string, strip_123);
+    string my_string2_stripped = spls_lstrip(my_string2, strip_space);
+
+    EXPECT_STREQ(my_string_stripped, "hello123");
+    EXPECT_EQ(spls_len(my_string_stripped), 8);
+
+    EXPECT_STREQ(my_string2_stripped, "Little test  ");
+    EXPECT_EQ(spls_len(my_string2_stripped), 13);
+
+    spls_free_string(my_string);
+    spls_free_string(my_string2);
+    spls_free_string(my_string_stripped);
+    spls_free_string(my_string2_stripped);
+    spls_free_string(strip_123);
+    spls_free_string(strip_space);
+}
+
+TEST(Strings, StringRStrip) {
+    string my_string = STR("123hello123");
+    string my_string2 = STR("    Little test  ");
+    string strip_123 = STR("123");
+    string strip_space = STR(" ");
+
+    string my_string_stripped = spls_rstrip(my_string, strip_123);
+    string my_string2_stripped = spls_rstrip(my_string2, strip_space);
+
+    EXPECT_STREQ(my_string_stripped, "123hello");
+    EXPECT_EQ(spls_len(my_string_stripped), 8);
+
+    EXPECT_STREQ(my_string2_stripped, "    Little test");
+    EXPECT_EQ(spls_len(my_string2_stripped), 15);
+
+    spls_free_string(my_string);
+    spls_free_string(my_string2);
+    spls_free_string(my_string_stripped);
+    spls_free_string(my_string2_stripped);
+    spls_free_string(strip_123);
+    spls_free_string(strip_space);
 }
 
 int main(int argc, char *argv[]) {

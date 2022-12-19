@@ -497,7 +497,7 @@ bool spls_islower(const string str) {
     }
 
     for (i = 0; i < str_len; i++) {
-        if (islower(str[i]) == 0) {
+        if (isupper(str[i]) != 0) {
             return false;
         }
     }
@@ -516,7 +516,7 @@ bool spls_isupper(const string str) {
     }
 
     for (i = 0; i < str_len; i++) {
-        if (isupper(str[i]) == 0) {
+        if (islower(str[i]) != 0) {
             return false;
         }
     }
